@@ -1,0 +1,5 @@
+## Folders
+build/
+xcode_build/
+## File Types
+*.o
