@@ -7,7 +7,7 @@
 //                    |   _   ||     |_ |       ||   _   |                    //
 //                    |__| |__||_______||_______||__| |__|                    //
 //                             www.amazingcow.com                             //
-//  File      : main.cpp                                                      //
+//  File      : AlienLaser.h                                                  //
 //  Project   : SpaceRaiders                                                  //
 //  Date      : Dec 18, 2017                                                  //
 //  License   : GPLv3                                                         //
@@ -18,36 +18,42 @@
 //                                                                            //
 //---------------------------------------------------------------------------~//
 
+#pragma once
+
 // SpaceRaiders
-#include "Engine.h"
-#include "Input.h"
-#include "Random.h"
-#include "SplashScene.h"
+#include "GameObject.h"
 
-//----------------------------------------------------------------------------//
-// Entry point                                                                //
-//----------------------------------------------------------------------------//
-int main()
+
+class AlienLaser
+    : public GameObject
 {
-    //--------------------------------------------------------------------------
-    // Init random number generator.
-    auto random_seed = -1;
-    Random::Init(random_seed);
+    //------------------------------------------------------------------------//
+    // Enums / Constants / Typedefs                                           //
+    //------------------------------------------------------------------------//
+public:
+    DEFINE_SMART_PTRS_OF(AlienLaser);
 
-    //--------------------------------------------------------------------------
-    // Init the input.
-    KeyboardInput input;
 
-    //--------------------------------------------------------------------------
-    // Init the game.
-    Engine game;
-    game.ConstructConsole(80, 30, 16, 16);
+    //------------------------------------------------------------------------//
+    // CTOR / DTOR                                                            //
+    //------------------------------------------------------------------------//
+public:
+     explicit AlienLaser(
+         Engine     *pEngineRef,
+         GameScene  *pGameSceneRef,
+         const Vec2  &position) noexcept;
 
-    auto p_game_ref  = &game;
-    auto p_input_ref = &input;
-    auto p_scene     = std ::make_shared  <SplashScene>(p_game_ref);
+    //------------------------------------------------------------------------//
+    // Public Methods                                                         //
+    //------------------------------------------------------------------------//
+public:
+    void Update() noexcept override;
+    void Render() noexcept override;
 
-    game.SetInput(p_input_ref);
-    game.SetScene(p_scene);
-    game.Start();
-}
+
+    //------------------------------------------------------------------------//
+    // iVars                                                                  //
+    //------------------------------------------------------------------------//
+private:
+    float m_timeToMove;
+};

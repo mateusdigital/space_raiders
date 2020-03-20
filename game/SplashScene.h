@@ -7,7 +7,7 @@
 //                    |   _   ||     |_ |       ||   _   |                    //
 //                    |__| |__||_______||_______||__| |__|                    //
 //                             www.amazingcow.com                             //
-//  File      : main.cpp                                                      //
+//  File      : SplashScene.h                                                 //
 //  Project   : SpaceRaiders                                                  //
 //  Date      : Dec 18, 2017                                                  //
 //  License   : GPLv3                                                         //
@@ -18,36 +18,40 @@
 //                                                                            //
 //---------------------------------------------------------------------------~//
 
+#pragma once
+
 // SpaceRaiders
-#include "Engine.h"
-#include "Input.h"
-#include "Random.h"
-#include "SplashScene.h"
+#include "Scene.h"
 
-//----------------------------------------------------------------------------//
-// Entry point                                                                //
-//----------------------------------------------------------------------------//
-int main()
+class SplashScene :
+    public Scene
 {
-    //--------------------------------------------------------------------------
-    // Init random number generator.
-    auto random_seed = -1;
-    Random::Init(random_seed);
+    //------------------------------------------------------------------------//
+    // CTOR / DTOR                                                            //
+    //------------------------------------------------------------------------//
+public:
+     SplashScene(Engine *pEngineRef);
 
-    //--------------------------------------------------------------------------
-    // Init the input.
-    KeyboardInput input;
 
-    //--------------------------------------------------------------------------
-    // Init the game.
-    Engine game;
-    game.ConstructConsole(80, 30, 16, 16);
+    //------------------------------------------------------------------------//
+    // Lifecycle                                                              //
+    //------------------------------------------------------------------------//
+public:
+    void OnEnter() noexcept override;
+    void OnExit () noexcept override;
 
-    auto p_game_ref  = &game;
-    auto p_input_ref = &input;
-    auto p_scene     = std ::make_shared  <SplashScene>(p_game_ref);
 
-    game.SetInput(p_input_ref);
-    game.SetScene(p_scene);
-    game.Start();
-}
+    //------------------------------------------------------------------------//
+    // Update / Render                                                        //
+    //------------------------------------------------------------------------//
+public:
+    void Update() noexcept override;
+    void Render() noexcept override;
+
+
+    //------------------------------------------------------------------------//
+    // iVars                                                                  //
+    //------------------------------------------------------------------------//
+private:
+    float m_time;
+};

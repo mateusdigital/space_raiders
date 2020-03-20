@@ -7,7 +7,7 @@
 //                    |   _   ||     |_ |       ||   _   |                    //
 //                    |__| |__||_______||_______||__| |__|                    //
 //                             www.amazingcow.com                             //
-//  File      : main.cpp                                                      //
+//  File      : Engine.cpp                                                    //
 //  Project   : SpaceRaiders                                                  //
 //  Date      : Dec 18, 2017                                                  //
 //  License   : GPLv3                                                         //
@@ -18,36 +18,67 @@
 //                                                                            //
 //---------------------------------------------------------------------------~//
 
-// SpaceRaiders
+// Header
 #include "Engine.h"
+// SpaceRaiders
 #include "Input.h"
 #include "Random.h"
-#include "SplashScene.h"
+
+
+// std::atomic<bool> olcConsoleGameEngine::m_bAtomActive(false);
+// std::condition_variable olcConsoleGameEngine::m_cvGameFinished;
+// std::mutex olcConsoleGameEngine::m_muxGame;
+
 
 //----------------------------------------------------------------------------//
-// Entry point                                                                //
+// CTOR / DTOR                                                                //
 //----------------------------------------------------------------------------//
-int main()
+Engine::Engine()
 {
-    //--------------------------------------------------------------------------
-    // Init random number generator.
-    auto random_seed = -1;
-    Random::Init(random_seed);
+    m_sAppName = L"SpaceRaiders";
+}
 
-    //--------------------------------------------------------------------------
-    // Init the input.
-    KeyboardInput input;
 
-    //--------------------------------------------------------------------------
-    // Init the game.
-    Engine game;
-    game.ConstructConsole(80, 30, 16, 16);
+//----------------------------------------------------------------------------//
+// Scene Management                                                           //
+//----------------------------------------------------------------------------//
+void Engine::SetScene(const Scene::SPtr& pScene) noexcept
+{
+    // COREASSERT_ASSERT(pScene != nullptr, "pScene cannot be nullptr");
+    if (m_pScene) m_pScene->OnExit();
 
-    auto p_game_ref  = &game;
-    auto p_input_ref = &input;
-    auto p_scene     = std ::make_shared  <SplashScene>(p_game_ref);
+    m_pScene = pScene;
+    m_pScene->OnEnter();
+}
 
-    game.SetInput(p_input_ref);
-    game.SetScene(p_scene);
-    game.Start();
+
+//----------------------------------------------------------------------------//
+// Engine Overrides                                                           //
+//----------------------------------------------------------------------------//
+bool Engine::OnUserCreate()
+{
+    m_bounds = Vec2(ScreenWidth(), ScreenHeight());
+    return true;
+}
+
+bool Engine::OnUserUpdate(float delta)
+{
+    m_deltaTime = delta;
+
+    // Update Input.
+    m_pInput->Update(
+        m_keys[VK_LEFT].bHeld,
+        m_keys[VK_RIGHT].bHeld,
+        m_keys[VK_SPACE].bHeld,
+        m_keys[VK_ESCAPE].bHeld
+    );
+
+    // Update state.
+    m_pScene->Update();
+
+    // Render state.
+    Fill(0, 0, ScreenWidth(), ScreenHeight(), PIXEL_SOLID, m_clearColor);
+    m_pScene->Render();
+
+    return true;
 }

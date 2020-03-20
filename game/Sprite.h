@@ -7,7 +7,7 @@
 //                    |   _   ||     |_ |       ||   _   |                    //
 //                    |__| |__||_______||_______||__| |__|                    //
 //                             www.amazingcow.com                             //
-//  File      : main.cpp                                                      //
+//  File      : Sprite_t                                                      //
 //  Project   : SpaceRaiders                                                  //
 //  Date      : Dec 18, 2017                                                  //
 //  License   : GPLv3                                                         //
@@ -17,37 +17,29 @@
 //  Description :                                                             //
 //                                                                            //
 //---------------------------------------------------------------------------~//
+#pragma once
+// std
+#include <string>
+#include <vector>
 
-// SpaceRaiders
-#include "Engine.h"
-#include "Input.h"
-#include "Random.h"
-#include "SplashScene.h"
-
-//----------------------------------------------------------------------------//
-// Entry point                                                                //
-//----------------------------------------------------------------------------//
-int main()
+class Sprite_t
 {
-    //--------------------------------------------------------------------------
-    // Init random number generator.
-    auto random_seed = -1;
-    Random::Init(random_seed);
+    //------------------------------------------------------------------------//
+    // CTOR / DTOR                                                            //
+    //------------------------------------------------------------------------//
+public:
+    inline Sprite_t(const std::wstring& g, const std::vector<int> c) :
+        glyphs(g),
+        colors(c)
+    {
+        // Empty...
+    }
 
-    //--------------------------------------------------------------------------
-    // Init the input.
-    KeyboardInput input;
+    //------------------------------------------------------------------------//
+    // iVars                                                                  //
+    //------------------------------------------------------------------------//
+public:
+    std::wstring     glyphs;
+    std::vector<int> colors;
+};
 
-    //--------------------------------------------------------------------------
-    // Init the game.
-    Engine game;
-    game.ConstructConsole(80, 30, 16, 16);
-
-    auto p_game_ref  = &game;
-    auto p_input_ref = &input;
-    auto p_scene     = std ::make_shared  <SplashScene>(p_game_ref);
-
-    game.SetInput(p_input_ref);
-    game.SetScene(p_scene);
-    game.Start();
-}

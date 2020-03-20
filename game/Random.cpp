@@ -7,7 +7,7 @@
 //                    |   _   ||     |_ |       ||   _   |                    //
 //                    |__| |__||_______||_______||__| |__|                    //
 //                             www.amazingcow.com                             //
-//  File      : main.cpp                                                      //
+//  File      : Random.cpp                                                    //
 //  Project   : SpaceRaiders                                                  //
 //  Date      : Dec 18, 2017                                                  //
 //  License   : GPLv3                                                         //
@@ -18,36 +18,59 @@
 //                                                                            //
 //---------------------------------------------------------------------------~//
 
-// SpaceRaiders
-#include "Engine.h"
-#include "Input.h"
+// Header
 #include "Random.h"
-#include "SplashScene.h"
+// std
+#include <time.h>
+#include <random>
+
 
 //----------------------------------------------------------------------------//
-// Entry point                                                                //
+// Enums / Constants / Typedefs                                               //
 //----------------------------------------------------------------------------//
-int main()
+typedef std::uniform_int_distribution <int>   intRand;
+typedef std::uniform_real_distribution<float> floatRand;
+
+
+//----------------------------------------------------------------------------//
+// Variables                                                                  //
+//----------------------------------------------------------------------------//
+namespace
 {
-    //--------------------------------------------------------------------------
-    // Init random number generator.
-    auto random_seed = -1;
-    Random::Init(random_seed);
+    std::default_random_engine rGen;
+    bool                       m_initialized;
+}
 
-    //--------------------------------------------------------------------------
-    // Init the input.
-    KeyboardInput input;
 
-    //--------------------------------------------------------------------------
-    // Init the game.
-    Engine game;
-    game.ConstructConsole(80, 30, 16, 16);
+//------------------------------------------------------------------------//
+// Init / Shutdown                                                        //
+//------------------------------------------------------------------------//
+void Random::Init(int randomSeed) noexcept
+{
+    if (randomSeed == -1)
+        randomSeed = time(nullptr);
 
-    auto p_game_ref  = &game;
-    auto p_input_ref = &input;
-    auto p_scene     = std ::make_shared  <SplashScene>(p_game_ref);
+    rGen.seed(randomSeed);
+    m_initialized = true;
+}
 
-    game.SetInput(p_input_ref);
-    game.SetScene(p_scene);
-    game.Start();
+bool Random::IsInitialized() noexcept
+{
+    return m_initialized;
+}
+
+
+//------------------------------------------------------------------------//
+// Random Methods                                                         //
+//------------------------------------------------------------------------//
+float Random::Float(float min, float max) noexcept
+{
+    floatRand rnd(min, max);
+    return rnd(rGen);
+}
+
+int Random::Int(int min, int max) noexcept
+{
+    intRand rnd(min, max);
+    return rnd(rGen);
 }

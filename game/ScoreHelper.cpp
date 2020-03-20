@@ -7,7 +7,7 @@
 //                    |   _   ||     |_ |       ||   _   |                    //
 //                    |__| |__||_______||_______||__| |__|                    //
 //                             www.amazingcow.com                             //
-//  File      : main.cpp                                                      //
+//  File      : ScoreHelper.h                                                 //
 //  Project   : SpaceRaiders                                                  //
 //  Date      : Dec 18, 2017                                                  //
 //  License   : GPLv3                                                         //
@@ -18,36 +18,46 @@
 //                                                                            //
 //---------------------------------------------------------------------------~//
 
-// SpaceRaiders
-#include "Engine.h"
-#include "Input.h"
-#include "Random.h"
-#include "SplashScene.h"
+// Header
+#include "ScoreHelper.h"
+// std
+#include <stdio.h>
+
 
 //----------------------------------------------------------------------------//
-// Entry point                                                                //
+// Constants                                                                  //
 //----------------------------------------------------------------------------//
-int main()
+constexpr auto kPath_Storage = "./HiSCORE.txt";
+
+
+void ScoreHelper::SaveScore(int score) noexcept
 {
     //--------------------------------------------------------------------------
-    // Init random number generator.
-    auto random_seed = -1;
-    Random::Init(random_seed);
+    // Try to open the file, if it doesn't exists just returns.
+    auto p_file = fopen(kPath_Storage, "w");
+    if (!p_file) // Error occurred - Ignore it.
+        return;
 
-    //--------------------------------------------------------------------------
-    // Init the input.
-    KeyboardInput input;
-
-    //--------------------------------------------------------------------------
-    // Init the game.
-    Engine game;
-    game.ConstructConsole(80, 30, 16, 16);
-
-    auto p_game_ref  = &game;
-    auto p_input_ref = &input;
-    auto p_scene     = std ::make_shared  <SplashScene>(p_game_ref);
-
-    game.SetInput(p_input_ref);
-    game.SetScene(p_scene);
-    game.Start();
+    fprintf(p_file, "%d", score);
+    fclose(p_file);
 }
+
+int ScoreHelper::LoadScore() noexcept
+{
+    //--------------------------------------------------------------------------
+    // Try to open the file, if it doesn't exists just returns.
+    auto p_file = fopen(kPath_Storage, "r");
+    if (!p_file) // No high scores.
+        return 0;
+
+    //--------------------------------------------------------------------------
+    // File exists, so we have a high score - Read it.
+    int value;
+
+    fscanf(p_file, "%d", &value);
+    fclose(p_file);
+    p_file = nullptr;
+
+    return value;
+}
+
