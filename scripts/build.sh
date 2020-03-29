@@ -82,6 +82,11 @@ if [ -n "$(pw_getopt_exists "--clean" "$@")" ]; then
     exit 0;
 fi;
 
+MODE=$(pw_getopt_arg "--mode" "$@");
+test -n "$MODE" \
+    && test -z "$(pw_string_in "$MODE" "release" "debug")" \
+    && pw_log_fatal "Invalid build mode: ($MODE)";
+
 ##
 ## Build ;D
 echo "Bulding (${PROJECT_NAME})";
@@ -94,9 +99,10 @@ echo "";
 
 mkdir -p "$BUILD_DIR";
 
+CURR_OS="$(pw_os_get_simple_name)";
 ## Windows build...
-if [ -z"$(pw_getopt_exists "--win32" "$@")" ]; then
-    test ! "$(pw_os_get_simple_name)" == "$(PW_OS_WSL)" \
+if [ -n "$(pw_getopt_exists "--win32" "$@")" ]; then
+    test ! "${CURR_OS}" == "$(PW_OS_WSL)" \
         && pw_log_fatal "Windows version can just be built on WSL...";
 
     pw_pushd "${PROJECT_ROOT}";
@@ -115,6 +121,21 @@ if [ -z"$(pw_getopt_exists "--win32" "$@")" ]; then
         cp "${PROJECT_ROOT}/libs/third_party/SDL2-2.0.12/lib/x86/SDL2.dll" "${BUILD_DIR}/win32";
         cp ${PROJECT_ROOT}/res/* "${BUILD_DIR}/win32";
     pw_popd;
+## Current Platform Build...
+else
+    # mkdir -p "${BUILD_DIR}/${CURR_OS}";
+    # GCC_OPT="-O3";
+    # if [ $"MODE" == "debug" ]; then
+    #     GCC_OPT="-g";
+    # fi
+
+    g++ -std=c++14 ${GCC_OPT}  -g                    \
+        $(sdl2-config --cflags)                    \
+        ${PROJECT_ROOT}/game/*.cpp                 \
+        $(sdl2-config --static-libs)               \
+        -o "${BUILD_DIR}/${CURR_OS}/${PROJECT_NAME}";
+
+    cp ${PROJECT_ROOT}/res/* "${BUILD_DIR}/${CURR_OS}";
 fi;
 
 ##
