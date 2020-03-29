@@ -1,11 +1,43 @@
-## Folders
-build/
-xcode_build/
-## File Types
-*.o
+*Zone.Identifier
+# Created by https://www.gitignore.io/api/visualstudio,visualstudiocode,windows
+# Edit at https://www.gitignore.io/?templates=visualstudio,visualstudiocode,windows
 
-# Created by https://www.gitignore.io/api/VisualStudio
-# Edit at https://www.gitignore.io/?templates=VisualStudio
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+
+# Dump file
+*.stackdump
+
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
@@ -357,5 +389,4 @@ healthchecksdb
 # Backup folder for Package Reference Convert tool in Visual Studio 2017
 MigrationBackup/
 
-# End of https://www.gitignore.io/api/VisualStudio
-vs.proj/HiSCORE.txt
+# End of https://www.gitignore.io/api/visualstudio,visualstudiocode,windows
