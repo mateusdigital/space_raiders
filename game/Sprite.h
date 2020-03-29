@@ -28,7 +28,7 @@ class Sprite_t
     // CTOR / DTOR                                                            //
     //------------------------------------------------------------------------//
 public:
-    inline Sprite_t(const std::wstring& g, const std::vector<int> c) :
+    inline Sprite_t(const std::string& g, const std::vector<int> c) :
         glyphs(g),
         colors(c)
     {
@@ -39,7 +39,6 @@ public:
     // iVars                                                                  //
     //------------------------------------------------------------------------//
 public:
-    std::wstring     glyphs;
+    std::string     glyphs;
     std::vector<int> colors;
 };
-

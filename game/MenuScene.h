@@ -65,11 +65,11 @@ private:
 private:
     int m_targetPos;
 
-    std::vector<std::wstring> m_logo;
+    std::vector<std::string> m_logo;
     std::vector<float       > m_speeds;
     std::vector<float       > m_positions;
 
-    std::wstring m_hiScoreMsg;
+    std::string m_hiScoreMsg;
 
     float m_timeToDemo;
 
