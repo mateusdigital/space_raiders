@@ -1,4 +1,7 @@
+
+build/
 *Zone.Identifier
+
 # Created by https://www.gitignore.io/api/visualstudio,visualstudiocode,windows
 # Edit at https://www.gitignore.io/?templates=visualstudio,visualstudiocode,windows
 
@@ -390,3 +393,4 @@ healthchecksdb
 MigrationBackup/
 
 # End of https://www.gitignore.io/api/visualstudio,visualstudiocode,windows
+dist
