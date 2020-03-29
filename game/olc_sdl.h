@@ -142,12 +142,6 @@ http://www.twitch.tv/javidx9
 #pragma once
 
 #include <fstream>
-#ifndef UNICODE
-#error Please enable UNICODE for your compiler! VS: Project Properties -> General -> \
-Character Set -> Use Unicode. Thanks! For now, Ill try enabling it for you - Javidx9
-#define UNICODE
-#define _UNICODE
-#endif
 
 #define __STDC_LIB_EXT1__
 #define __STDC_WANT_LIB_EXT1__ 1
@@ -448,14 +442,13 @@ public:
 		m_sAppName = "Default";
 	}
 
-	int ConstructConsole(int width, int height, int fontw, int fonth)
+	int ConstructConsole(int width, int height, int fontw, int fonth, std::string const cwd)
 	{
 		m_nScreenWidth = width;
 		m_nScreenHeight = height;
 		m_nFontWidth = fontw;
 		m_nFontHeight = fonth;
-
-
+		m_cwd         = cwd;
 
 
 		// Allocate memory for screen buffer
@@ -768,7 +761,7 @@ private:
 		m_screen = SDL_CreateTexture(m_render, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, m_nScreenWidth * m_nFontWidth, m_nScreenHeight * m_nFontHeight);
 
 		// Load Font File
-		LoadFontFile("./olcfont_consolas.bmp");
+		LoadFontFile("olcfont_consolas.bmp");
 
 		// Create user resources as part of this thread
 		if (!OnUserCreate())
@@ -1112,10 +1105,13 @@ protected:
 	{
 		// Load image.
 		SDL_Surface* temp = SDL_LoadBMP(fname.c_str());
-
-		if (temp == nullptr) {
-			std::wcout << "Please download the necessary bmp file too!\n";
-			throw 1;
+		if(temp == nullptr) {
+			std::string const fullpath = m_cwd + "/" + fname;
+			temp = SDL_LoadBMP(fullpath.c_str());
+			if(!temp) {
+				printf("Missing file: %s\n", fname.c_str());
+				abort();
+			}
 		}
 
 		// set color key to 255,0,255; this basically makes
@@ -1310,7 +1306,7 @@ protected:
 	static std::atomic<bool> m_bAtomActive;
 	static std::condition_variable m_cvGameFinished;
 	static std::mutex m_muxGame;
-
+	std::string m_cwd;
 private:
 	SDL_Window* m_window;
 	SDL_Renderer* m_render;

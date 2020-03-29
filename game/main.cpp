@@ -27,8 +27,11 @@
 //----------------------------------------------------------------------------//
 // Entry point                                                                //
 //----------------------------------------------------------------------------//
-int main()
+int main(int argc, char const *argv[])
 {
+    std::string cwd = argv[0];
+    cwd = cwd.substr(0, cwd.find_last_of('/'));
+
     //--------------------------------------------------------------------------
     // Init random number generator.
     auto random_seed = -1;
@@ -41,11 +44,11 @@ int main()
     //--------------------------------------------------------------------------
     // Init the game.
     Engine game;
-    game.ConstructConsole(80, 30, 16, 16);
+    game.ConstructConsole(80, 30, 16, 16, cwd);
 
     auto p_game_ref  = &game;
     auto p_input_ref = &input;
-    auto p_scene     = std ::make_shared  <SplashScene>(p_game_ref);
+    auto p_scene     = std ::make_shared<SplashScene>(p_game_ref);
 
     game.SetInput(p_input_ref);
     game.SetScene(p_scene);
