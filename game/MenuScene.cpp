@@ -214,7 +214,7 @@ void MenuScene::Render() noexcept
 
     //--------------------------------------------------------------------------
     // Draw Copyright
-    auto copyright = std::string("Amazing Cow Labs - 2017");
+    auto copyright = std::string("Amazing Cow Labs - 2017, 2020");
     m_pEngineRef->DrawString(
         bounds_w * 0.5f - copyright.size() * 0.5f,
         bounds_h - 2,
