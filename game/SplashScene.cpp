@@ -115,7 +115,7 @@ void SplashScene::Render() noexcept
             m_pEngineRef->Draw(
                 j + half_bounds.x - half_cow_x,
                 i + half_bounds.y - half_cow_y,
-                PIXEL_HALF,
+                '.',
                 Random::Int(FG_BLACK+1, FG_WHITE)
             );
         }
