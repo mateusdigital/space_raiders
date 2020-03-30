@@ -37,18 +37,18 @@ constexpr auto kDuration_Scene = 1.5;
 // Variables                                                                  //
 //----------------------------------------------------------------------------//
 namespace {
-     wchar_t kCOW[kCOW_Y][kCOW_X] = {
-         {L"     .      .     "},
-         {L"     ........     "},
-         {L"   ..        ..   "},
-         {L"  ...  .  .  ...  "},
-         {L"  . .        . .  "},
-         {L"   ............   "},
-         {L" .              . "},
-         {L".     .    .     ."},
-         {L".     .    .     ."},
-         {L" .              . "},
-         {L"   ............   "}
+     _char_t kCOW[kCOW_Y][kCOW_X] = {
+         {"     .      .     "},
+         {"     ........     "},
+         {"   ..        ..   "},
+         {"  ...  .  .  ...  "},
+         {"  . .        . .  "},
+         {"   ............   "},
+         {" .              . "},
+         {".     .    .     ."},
+         {".     .    .     ."},
+         {" .              . "},
+         {"   ............   "}
      };
 }
 
@@ -115,7 +115,7 @@ void SplashScene::Render() noexcept
             m_pEngineRef->Draw(
                 j + half_bounds.x - half_cow_x,
                 i + half_bounds.y - half_cow_y,
-                PIXEL_HALF,
+                '.',
                 Random::Int(FG_BLACK+1, FG_WHITE)
             );
         }
@@ -123,6 +123,6 @@ void SplashScene::Render() noexcept
 
     //--------------------------------------------------------------------------
     // Draw the mesages.
-    m_pEngineRef->DrawString(30, 22, L"** Amazing Cow! **", FG_WHITE);
-    m_pEngineRef->DrawString(30, 23, L" [A n2omatt Game]",  FG_WHITE);
+    m_pEngineRef->DrawString(30, 22, "** Amazing Cow! **", FG_WHITE);
+    m_pEngineRef->DrawString(30, 23, " [A n2omatt Game]",  FG_WHITE);
 }

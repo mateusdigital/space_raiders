@@ -40,7 +40,7 @@ struct PlayerSprite
 {
     PlayerSprite() :
         Sprite_t(
-            L"_\\|P|/_",
+            "_\\|P|/_",
             { FG_BLUE, FG_BLUE, FG_YELLOW, FG_BLUE, FG_YELLOW, FG_BLUE, FG_BLUE }
         )
     {

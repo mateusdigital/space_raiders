@@ -20,7 +20,7 @@
 #pragma once
 
 // olcConsoleGameEngine
-#include "olc.h"
+#include "olc_sdl.h"
 // SpaceRaiders
 #include "Input.h"
 #include "Vec2.h"

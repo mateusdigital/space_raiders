@@ -38,7 +38,7 @@ struct PlayerLaserSprite
     : Sprite_t
 {
     PlayerLaserSprite() :
-        Sprite_t( L"|",  { FG_GREEN })
+        Sprite_t( "|",  { FG_GREEN })
     {
         // Empty...
     }

@@ -55,7 +55,7 @@ struct AlienSprite
 {
     AlienSprite() :
         Sprite_t(
-            L"<=|A|=>",
+            "<=|A|=>",
             {FG_YELLOW, FG_YELLOW, FG_RED, FG_YELLOW, FG_RED, FG_YELLOW, FG_YELLOW}
         )
     {
@@ -68,7 +68,7 @@ struct BetterAlienSprite
 {
     BetterAlienSprite() :
         Sprite_t(
-            L"<|B|>",
+            "<|B|>",
             {FG_RED, FG_YELLOW, FG_RED, FG_YELLOW, FG_RED}
         )
     {

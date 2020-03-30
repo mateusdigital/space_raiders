@@ -47,12 +47,12 @@ MenuScene::MenuScene(Engine *pEngineRef) :
 
     //--------------------------------------------------------------------------
     // Init the logo.
-    m_logo.push_back(LR"(   _____                         ____        _     __              )");
-    m_logo.push_back(LR"(  / ___/____  ____ _________    / __ \____ _(_)___/ /__  __________)");
-    m_logo.push_back(LR"(  \__ \/ __ \/ __ `/ ___/ _ \  / /_/ / __ `/ / __  / _ \/ ___/ ___/)");
-    m_logo.push_back(LR"( ___/ / /_/ / /_/ / /__/  __/ / _, _/ /_/ / / /_/ /  __/ /  (__  ) )");
-    m_logo.push_back(LR"(/____/ .___/\__,_/\___/\___/ /_/ |_|\__,_/_/\__,_/\___/_/  /____/  )");
-    m_logo.push_back(LR"(     /_/                                                           )");
+    m_logo.push_back(R"(   _____                         ____        _     __              )");
+    m_logo.push_back(R"(  / ___/____  ____ _________    / __ \____ _(_)___/ /__  __________)");
+    m_logo.push_back(R"(  \__ \/ __ \/ __ `/ ___/ _ \  / /_/ / __ `/ / __  / _ \/ ___/ ___/)");
+    m_logo.push_back(R"( ___/ / /_/ / /_/ / /__/  __/ / _, _/ /_/ / / /_/ /  __/ /  (__  ) )");
+    m_logo.push_back(R"(/____/ .___/\__,_/\___/\___/ /_/ |_|\__,_/_/\__,_/\___/_/  /____/  )");
+    m_logo.push_back(R"(     /_/                                                           )");
 
     auto logo_h = int(m_logo   .size());
     auto logo_w = int(m_logo[0].size());
@@ -82,9 +82,9 @@ MenuScene::MenuScene(Engine *pEngineRef) :
 
     //--------------------------------------------------------------------------
     // Init HiScore
-    m_hiScoreMsg = L"[HI-SCORE: ";
-    m_hiScoreMsg += std::to_wstring(ScoreHelper::LoadScore());
-    m_hiScoreMsg += L"]";
+    m_hiScoreMsg = "[HI-SCORE: ";
+    m_hiScoreMsg += std::to_string(ScoreHelper::LoadScore());
+    m_hiScoreMsg += "]";
 
 
     //--------------------------------------------------------------------------
@@ -183,9 +183,9 @@ void MenuScene::Render() noexcept
 
     //--------------------------------------------------------------------------
     // Draw Instructions.
-    auto left_msg   = std::wstring(L" [<-]   To move LEFT."   );
-    auto right_msg  = std::wstring(L" [->]   To move RIGHT."  );
-    auto fire_msg   = std::wstring(L"[SPACE] To SHOT a laser.");
+    auto left_msg   = std::string(" [<-]   To move LEFT."   );
+    auto right_msg  = std::string(" [->]   To move RIGHT."  );
+    auto fire_msg   = std::string("[SPACE] To SHOT a laser.");
     auto msg_offset = kOffset_Logo_Y + logo_h + 6;
 
     // Left.
@@ -214,7 +214,7 @@ void MenuScene::Render() noexcept
 
     //--------------------------------------------------------------------------
     // Draw Copyright
-    auto copyright = std::wstring(L"Amazing Cow Labs - 2017");
+    auto copyright = std::string("Amazing Cow Labs - 2017, 2020");
     m_pEngineRef->DrawString(
         bounds_w * 0.5f - copyright.size() * 0.5f,
         bounds_h - 2,

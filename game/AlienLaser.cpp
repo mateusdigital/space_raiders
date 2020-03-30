@@ -38,7 +38,7 @@ struct AlienLaserSprite
     : Sprite_t
 {
     AlienLaserSprite() :
-        Sprite_t( L"|",  { FG_RED })
+        Sprite_t( "|",  { FG_RED })
     {
         // Empty...
     }

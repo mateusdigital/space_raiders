@@ -39,7 +39,7 @@ struct DummySprite
     : Sprite_t
 {
     DummySprite() :
-        Sprite_t( L"*",  { FG_RED })
+        Sprite_t( "*",  { FG_RED })
     {
         // Empty...
     }
