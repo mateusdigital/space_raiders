@@ -25,7 +25,7 @@ source /usr/local/src/stdmatt/shellscript_utils/main.sh
 ## Constants                                                                  ##
 ##----------------------------------------------------------------------------##
 PROJECT_NAME="space-raiders";
-
+PROJECT_PKG_NAME="$(pw_string_replace "$PROJECT_NAME" "-" "_")";
 
 ##----------------------------------------------------------------------------##
 ## Vars                                                                       ##
@@ -38,8 +38,7 @@ DIST_DIR=$(pw_abspath "$PROJECT_ROOT/dist");
 
 ## Info
 MODE="debug";
-PLATFORM="desktop";
-PLATFORM_BUILD_SCRIPT="";
+PLATFORM="$(pw_os_get_simple_name)";
 PROJECT_VERSION="$(bump-the-version  \
     "${PROJECT_ROOT}/game/Version.h" \
     "#define GAME_VERSION"           \
@@ -47,7 +46,6 @@ PROJECT_VERSION="$(bump-the-version  \
 
 DIST_FILES="                   \
     ${BUILD_DIR}/$PROJECT_NAME \
-    ${PROJECT_ROOT}/assets/    \
 ";
 
 
@@ -98,10 +96,19 @@ if [ -n "$(pw_getopt_exists "--clean" "$@")" ]; then
     exit 0;
 fi;
 
+## Mode.
 MODE=$(pw_getopt_arg "--mode" "$@");
 test -n "$MODE" \
     && test -z "$(pw_string_in "$MODE" "release" "debug")" \
     && pw_log_fatal "Invalid build mode: ($MODE)";
+
+## Platform.
+if [ -n "$(pw_getopt_exists "--win32" "$@")" ]; then
+    test ! "${PLATFORM}" == "$(PW_OS_WSL)" \
+        && pw_log_fatal "Windows version can just be built on WSL...";
+    PLATFORM="win32";
+fi;
+
 
 ##
 ## Build ;D
@@ -115,12 +122,8 @@ echo "";
 
 mkdir -p "$BUILD_DIR";
 
-CURR_OS="$(pw_os_get_simple_name)";
 ## Windows build...
-if [ -n "$(pw_getopt_exists "--win32" "$@")" ]; then
-    test ! "${CURR_OS}" == "$(PW_OS_WSL)" \
-        && pw_log_fatal "Windows version can just be built on WSL...";
-
+if [ "$PLATFORM" == "win32" ]; then
     pw_pushd "${PROJECT_ROOT}";
         ## @notice(stdmatt): We need a separated script to handle the
         ## shit from windows that need to import a file to the compiler
@@ -139,13 +142,14 @@ if [ -n "$(pw_getopt_exists "--win32" "$@")" ]; then
     pw_popd;
 ## Current Platform Build...
 else
-    # mkdir -p "${BUILD_DIR}/${CURR_OS}";
-    # GCC_OPT="-O3";
-    # if [ $"MODE" == "debug" ]; then
-    #     GCC_OPT="-g";
-    # fi
+    mkdir -p "${BUILD_DIR}/${CURR_OS}";
+    GCC_OPT="-O3";
+    if [ $"MODE" == "debug" ]; then
+        echo "Building debug mode...";
+        GCC_OPT="-g";
+    fi
 
-    g++ -std=c++14 ${GCC_OPT}  -g                    \
+    g++ -std=c++14 ${GCC_OPT}                      \
         $(sdl2-config --cflags)                    \
         ${PROJECT_ROOT}/game/*.cpp                 \
         $(sdl2-config --static-libs)               \
@@ -154,13 +158,13 @@ else
     cp ${PROJECT_ROOT}/res/* "${BUILD_DIR}/${CURR_OS}";
 fi;
 
+
 ##
 ## Create the distribution file.
 if [ -n "$(pw_getopt_exists "--dist" "$@")" ]; then
-    PLATFORM=$(pw_os_get_simple_name);
     echo "Packaging (${PROJECT_NAME}) version: (${PROJECT_VERSION}) for platform: (${PLATFORM})";
 
-    PACKAGE_NAME="${PROJECT_NAME}_${PLATFORM}_${PROJECT_VERSION}";
+    PACKAGE_NAME="${PROJECT_PKG_NAME}_${PLATFORM}_${PROJECT_VERSION}";
     PACKAGE_DIR="${DIST_DIR}/${PACKAGE_NAME}";
 
     ## Clean the directory.
