@@ -44,11 +44,6 @@ PROJECT_VERSION="$(bump-the-version  \
     "#define GAME_VERSION"           \
     "show")";
 
-DIST_FILES="                   \
-    ${BUILD_DIR}/$PROJECT_NAME \
-";
-
-
 ##----------------------------------------------------------------------------##
 ## Functions                                                                  ##
 ##----------------------------------------------------------------------------##
@@ -135,14 +130,20 @@ if [ "$PLATFORM" == "win32" ]; then
         powershell.exe  -F "${SCRIPT_DIR}/build_windows.ps1";
         find . -iname "*.obj" | xargs rm;
 
-        mkdir -p "${BUILD_DIR}/win32";
-        mv *.exe "${BUILD_DIR}/win32/space-raiders.exe";
-        cp "${PROJECT_ROOT}/libs/third_party/SDL2-2.0.12/lib/x86/SDL2.dll" "${BUILD_DIR}/win32";
-        cp ${PROJECT_ROOT}/res/* "${BUILD_DIR}/win32";
+        W32_BUILD_DIR="${BUILD_DIR}/win32"
+        mkdir -p "$W32_BUILD_DIR";
+
+        mv *.exe "${W32_BUILD_DIR}space-raiders.exe";
+        cp "${PROJECT_ROOT}/libs/third_party/SDL2-2.0.12/lib/x86/SDL2.dll" "${W32_BUILD_DIR}";
+        cp ${PROJECT_ROOT}/res/* "${W32_BUILD_DIR}";
+
+        DIST_FILES="$W32_BUILD_DIR";
     pw_popd;
 ## Current Platform Build...
 else
-    mkdir -p "${BUILD_DIR}/${CURR_OS}";
+    PLATFORM_BUILD_DIR="${BUILD_DIR}/${PLATFORM}";
+
+    mkdir -p "$PLATFORM_BUILD_DIR";
     GCC_OPT="-O3";
     if [ $"MODE" == "debug" ]; then
         echo "Building debug mode...";
@@ -153,9 +154,11 @@ else
         $(sdl2-config --cflags)                    \
         ${PROJECT_ROOT}/game/*.cpp                 \
         $(sdl2-config --static-libs)               \
-        -o "${BUILD_DIR}/${CURR_OS}/${PROJECT_NAME}";
+        -o "${PLATFORM_BUILD_DIR}/${PROJECT_NAME}";
 
-    cp ${PROJECT_ROOT}/res/* "${BUILD_DIR}/${CURR_OS}";
+    cp ${PROJECT_ROOT}/res/* "${PLATFORM_BUILD_DIR}";
+
+    DIST_FILES="$PLATFORM_BUILD_DIR";
 fi;
 
 
