@@ -1117,17 +1117,24 @@ protected:
 		return 0;
 	}
 
+	SDL_Surface* _LoadFontFile(std::string const &path)
+	{
+		SDL_Surface* temp = SDL_LoadBMP(path.c_str());
+		return temp;
+	}
+
 	void LoadFontFile(const std::string& fname)
 	{
-		// Load image.
-		SDL_Surface* temp = SDL_LoadBMP(fname.c_str());
-		if(temp == nullptr) {
-			std::string const fullpath = m_cwd + "/" + fname;
-			temp = SDL_LoadBMP(fullpath.c_str());
-			if(!temp) {
-				printf("Missing file: %s\n", fname.c_str());
-				abort();
-			}
+		SDL_Surface *temp = _LoadFontFile(fname);
+		if(!temp) {
+			temp = _LoadFontFile(m_cwd + "/" + fname);
+		}
+		if(!temp) {
+			temp = _LoadFontFile("res/" + fname);
+		}
+		if(!temp) {
+			printf("Missing file: %s\n", fname.c_str());
+			abort();
 		}
 
 		// set color key to 255,0,255; this basically makes
