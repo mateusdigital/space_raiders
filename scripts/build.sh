@@ -21,11 +21,13 @@
 ##----------------------------------------------------------------------------##
 source /usr/local/src/stdmatt/shellscript_utils/main.sh
 
+
 ##----------------------------------------------------------------------------##
 ## Constants                                                                  ##
 ##----------------------------------------------------------------------------##
 PROJECT_NAME="space-raiders";
 PROJECT_PKG_NAME="$(pw_string_replace "$PROJECT_NAME" "-" "_")";
+
 
 ##----------------------------------------------------------------------------##
 ## Vars                                                                       ##
@@ -43,6 +45,7 @@ PROJECT_VERSION="$(bump-the-version  \
     "${PROJECT_ROOT}/game/Version.h" \
     "#define GAME_VERSION"           \
     "show")";
+
 
 ##----------------------------------------------------------------------------##
 ## Functions                                                                  ##
@@ -64,7 +67,6 @@ END_TEXT
 
     exit $1
 }
-
 
 ##------------------------------------------------------------------------------
 clean()
@@ -104,6 +106,10 @@ if [ -n "$(pw_getopt_exists "--win32" "$@")" ]; then
     PLATFORM="win32";
 fi;
 
+if [ "${PLATFORM}" == "$(PW_OS_WSL)" ]; then
+    PLATFORM="$(PW_OS_GNU_LINUX)";
+fi;
+
 
 ##
 ## Build ;D
@@ -119,46 +125,28 @@ mkdir -p "$BUILD_DIR";
 
 ## Windows build...
 if [ "$PLATFORM" == "win32" ]; then
-    pw_pushd "${PROJECT_ROOT}";
-        ## @notice(stdmatt): We need a separated script to handle the
-        ## shit from windows that need to import a file to the compiler
-        ## to work...
-        ##
-        ## Furthermore the CL.EXE has A LOT of strange options that I'll not
-        ## dwell currently, so we need a lot of hackie stuff to make the
-        ## things sane...
-        powershell.exe  -F "${SCRIPT_DIR}/build_windows.ps1";
-        find . -iname "*.obj" | xargs rm;
-
-        W32_BUILD_DIR="${BUILD_DIR}/win32"
-        mkdir -p "$W32_BUILD_DIR";
-
-        mv *.exe "${W32_BUILD_DIR}space-raiders.exe";
-        cp "${PROJECT_ROOT}/libs/third_party/SDL2-2.0.12/lib/x86/SDL2.dll" "${W32_BUILD_DIR}";
-        cp ${PROJECT_ROOT}/res/* "${W32_BUILD_DIR}";
-
-        DIST_FILES="$W32_BUILD_DIR";
+    ## needs to use relative paths otherwise cmd.exe complains
+    pw_pushd "${SCRIPT_DIR}";
+        cmd.exe /c build_windows.cmd
     pw_popd;
+
+    ## We need to copy the SDL DLL...
+    SDL_DLL="libs/third_party/win32/SDL2-2.0.12/lib/x64/SDL2.dll";
+    WIN32_BUILD="build_win32/Release";
+    cp "$SDL_DLL" "$WIN32_BUILD";
+
+    mkdir "$BUILD_DIR/win32";
+    cp -r "$WIN32_BUILD"/* "$BUILD_DIR/win32";
 ## Current Platform Build...
 else
-    PLATFORM_BUILD_DIR="${BUILD_DIR}/${PLATFORM}";
+    mkdir "build_${PLATFORM}";
+    pw_pushd "build_${PLATFORM}";
+        cmake ..
+        cmake --build . --config Release
+    pw_popd;
 
-    mkdir -p "$PLATFORM_BUILD_DIR";
-    GCC_OPT="-O3";
-    if [ $"MODE" == "debug" ]; then
-        echo "Building debug mode...";
-        GCC_OPT="-g";
-    fi
-
-    g++ -std=c++14 ${GCC_OPT}                      \
-        $(sdl2-config --cflags)                    \
-        ${PROJECT_ROOT}/game/*.cpp                 \
-        $(sdl2-config --static-libs)               \
-        -o "${PLATFORM_BUILD_DIR}/${PROJECT_NAME}";
-
-    cp ${PROJECT_ROOT}/res/* "${PLATFORM_BUILD_DIR}";
-
-    DIST_FILES="$PLATFORM_BUILD_DIR";
+    mkdir "${BUILD_DIR}/${PLATFORM}";
+    cp "build_${PLATFORM}/${PROJECT_NAME}" "${BUILD_DIR}/${PLATFORM}";
 fi;
 
 
@@ -174,12 +162,10 @@ if [ -n "$(pw_getopt_exists "--dist" "$@")" ]; then
     rm    -rf "${PACKAGE_DIR}";
     mkdir -p  "${PACKAGE_DIR}";
 
-    ## Copy the files to the directory.
-    for ITEM in $DIST_FILES; do
-        cp -R "$ITEM" "${PACKAGE_DIR}";
-    done;
+    cp    "${BUILD_DIR}/${PLATFORM}/"* "$PACKAGE_DIR";
+    cp -r "${PROJECT_ROOT}/res"        "$PACKAGE_DIR";
 
-    cd "${DIST_DIR}"
-    zip -r "${PACKAGE_NAME}.zip" "./${PACKAGE_NAME}";
-    cd -
+    pw_pushd "${DIST_DIR}"
+        zip -r "${PACKAGE_NAME}.zip" "./${PACKAGE_NAME}";
+    pw_popd;
 fi;
