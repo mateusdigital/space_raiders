@@ -125,6 +125,7 @@ mkdir -p "$BUILD_DIR";
 
 ## Windows build...
 if [ "$PLATFORM" == "win32" ]; then
+    rm -rf ./build_win32;
     ## needs to use relative paths otherwise cmd.exe complains
     pw_pushd "${SCRIPT_DIR}";
         cmd.exe /c build_windows.cmd
@@ -135,7 +136,7 @@ if [ "$PLATFORM" == "win32" ]; then
     WIN32_BUILD="build_win32/Release";
     cp "$SDL_DLL" "$WIN32_BUILD";
 
-    mkdir "$BUILD_DIR/win32";
+    mkdir -p "$BUILD_DIR/win32";
     cp -r "$WIN32_BUILD"/* "$BUILD_DIR/win32";
 ## Current Platform Build...
 else
