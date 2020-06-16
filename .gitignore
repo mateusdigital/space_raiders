@@ -4,3 +4,4 @@ build/
 build_win32/
 build_gnu_linux/
 dist
+build_osx/
