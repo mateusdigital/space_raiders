@@ -139,13 +139,13 @@ if [ "$PLATFORM" == "win32" ]; then
     cp -r "$WIN32_BUILD"/* "$BUILD_DIR/win32";
 ## Current Platform Build...
 else
-    mkdir "build_${PLATFORM}";
+    mkdir -p "build_${PLATFORM}";
     pw_pushd "build_${PLATFORM}";
         cmake ..
         cmake --build . --config Release
     pw_popd;
 
-    mkdir "${BUILD_DIR}/${PLATFORM}";
+    mkdir -p "${BUILD_DIR}/${PLATFORM}";
     cp "build_${PLATFORM}/${PROJECT_NAME}" "${BUILD_DIR}/${PLATFORM}";
 fi;
 
