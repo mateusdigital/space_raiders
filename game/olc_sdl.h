@@ -168,7 +168,7 @@ http://www.twitch.tv/javidx9
 #ifdef _WIN32
 #include <SDL.h>
 #else
-#include <SDL2/SDL.h>
+#include <SDL.h>
 #endif
 #undef main
 
