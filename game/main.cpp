@@ -29,8 +29,8 @@
 //----------------------------------------------------------------------------//
 int main(int argc, char const *argv[])
 {
-    std::string cwd = argv[0];
-    cwd = cwd.substr(0, cwd.find_last_of('/'));
+    // std::wstring cwd = argv[0];
+    // cwd = cwd.substr(0, cwd.find_last_of('/'));
 
     //--------------------------------------------------------------------------
     // Init random number generator.
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
     //--------------------------------------------------------------------------
     // Init the game.
     Engine game;
-    game.ConstructConsole(80, 30, 16, 16, cwd);
+    game.ConstructConsole(80, 30, 16, 16);
 
     auto p_game_ref  = &game;
     auto p_input_ref = &input;
@@ -52,5 +52,7 @@ int main(int argc, char const *argv[])
 
     game.SetInput(p_input_ref);
     game.SetScene(p_scene);
+
+    Sleep(2000);
     game.Start();
 }

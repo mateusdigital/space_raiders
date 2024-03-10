@@ -35,7 +35,7 @@
 //----------------------------------------------------------------------------//
 Engine::Engine()
 {
-    m_sAppName = "SpaceRaiders";
+    m_sAppName = L"SpaceRaiders";
 }
 
 

@@ -181,10 +181,10 @@ void GameScene::Render() noexcept
     const auto& bounds = m_pEngineRef->Bounds();
     //--------------------------------------------------------------------------
     // Score / Lives.
-    auto status_msg = std::string("LEVEL: ") + std::to_string(m_level + 1)
-        + std::string(" | SCORE: ") + std::to_string(m_score)
-        + std::string(" | HI-SCORE: ") + std::to_string(m_hiScore)
-        + std::string(" | LIVES: ") + std::to_string(m_lives);
+    auto status_msg = std::wstring(L"LEVEL: ") + std::to_wstring(m_level + 1)
+        + std::wstring(L" | SCORE: ")    + std::to_wstring(m_score)
+        + std::wstring(L" | HI-SCORE: ") + std::to_wstring(m_hiScore)
+        + std::wstring(L" | LIVES: ")    + std::to_wstring(m_lives);
 
     m_pEngineRef->DrawString(
         bounds.x * 0.5f - status_msg.size() * 0.5f,
@@ -199,7 +199,7 @@ void GameScene::Render() noexcept
     if (m_demoMode)
     {
 
-        auto msg = std::string("--> [ D E M O ] <--");
+        auto msg = std::wstring(L"--> [ D E M O ] <--");
         m_pEngineRef->DrawString(
             bounds.x * 0.5f - msg.size() * 0.5f,
             bounds.y * 0.5f,
