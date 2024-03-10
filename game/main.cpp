@@ -53,6 +53,5 @@ int main(int argc, char const *argv[])
     game.SetInput(p_input_ref);
     game.SetScene(p_scene);
 
-    Sleep(2000);
     game.Start();
 }
